@@ -117,6 +117,7 @@ public partial class App : Application
     [STAThread]
     public static void Main()
     {
+        //可以使用Task异步处理化
         _host.Start();
 
         App app = new();
