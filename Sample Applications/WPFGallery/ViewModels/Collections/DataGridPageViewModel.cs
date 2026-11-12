@@ -1,3 +1,7 @@
+// This Source Code Form is subject to the terms of the MIT License.
+// If a copy of the MIT was not distributed with this file, You can obtain one at https://opensource.org/licenses/MIT.
+// Copyright (C) Leszek Pomianowski and WPF UI Contributors.
+// All Rights Reserved.
 
 using WPFGallery.Models;
 
@@ -26,6 +30,7 @@ public partial class DataGridPageViewModel : ObservableObject
 
         var adjectives = new[] { "Red", "Blueberry" };
         var names = new[] { "Marmalade", "Dumplings", "Soup" };
+        var quantitiesPerUnit = new[] { "6", "10", "12", "16", "24", "48" };
         //var units = new[] { "grams", "kilograms", "milliliters" };
 
         for (int i = 0; i < 50; i++)
@@ -39,6 +44,7 @@ public partial class DataGridPageViewModel : ObservableObject
                         adjectives[random.Next(0, adjectives.Length)]
                         + " "
                         + names[random.Next(0, names.Length)],
+                    QuantityPerUnit = quantitiesPerUnit[random.Next(0, quantitiesPerUnit.Length)],
                     UnitPrice = Math.Round(random.NextDouble() * 20.0, 3),
                     UnitsInStock = random.Next(0, 100)
                 }

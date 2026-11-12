@@ -1,3 +1,7 @@
+// This Source Code Form is subject to the terms of the MIT License.
+// If a copy of the MIT was not distributed with this file, You can obtain one at https://opensource.org/licenses/MIT.
+// Copyright (C) Leszek Pomianowski and WPF UI Contributors.
+// All Rights Reserved.
 
 using WPFGallery.Models;
 
@@ -29,9 +33,13 @@ public partial class ListViewPageViewModel : ObservableObject
     [ObservableProperty]
     private ObservableCollection<Person> _basicListViewItems;
 
+    [ObservableProperty]
+    private ObservableCollection<Person> _gridViewItems;
+
     public ListViewPageViewModel()
     {
         _basicListViewItems = GeneratePersons();
+        _gridViewItems = GeneratePersons();
     }
 
     private ObservableCollection<Person> GeneratePersons()

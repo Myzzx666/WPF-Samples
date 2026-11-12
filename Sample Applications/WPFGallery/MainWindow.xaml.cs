@@ -1,17 +1,14 @@
-﻿using Microsoft.Win32;
-using System.Windows.Documents;
+﻿using System.Windows.Automation;
+using System.Windows.Automation.Peers;
+using System.Windows.Controls.Primitives;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Shell;
+using Microsoft.Win32;
+using WPFGallery.Helpers;
+using WPFGallery.Models;
 using WPFGallery.Navigation;
 using WPFGallery.ViewModels;
-using WPFGallery.Models;
 using WPFGallery.Views;
-using System.Windows.Automation.Peers;
-using System.Windows.Automation;
-using WPFGallery.Controls;
-using System.Windows.Controls.Primitives;
-using WPFGallery.Helpers;
 
 namespace WPFGallery;
 
@@ -28,33 +25,35 @@ public partial class MainWindow : Window
         InitializeComponent();
 
         UpdateWindowBackground();
-        UpdateTitleBarButtonsVisibility();
+        UpdateMainWindowVisuals();
 
         _navigationService = navigationService;
         _navigationService.Navigating += OnNavigating;
         _navigationService.SetFrame(this.RootContentFrame);
-        _navigationService.Navigate(typeof(DashboardPage));
+        _navigationService.Navigate(typeof(DashboardPage), false);
 
         WindowChrome.SetWindowChrome(
             this,
             new WindowChrome
             {
                 CaptionHeight = 50,
-                CornerRadius = default,
+                CornerRadius = new CornerRadius(12),
                 GlassFrameThickness = new Thickness(-1),
                 ResizeBorderThickness = ResizeMode == ResizeMode.NoResize ? default : new Thickness(4),
-                UseAeroCaptionButtons = true
+                UseAeroCaptionButtons = true,
+                NonClientFrameEdges = GetPrefferedNonClientFrameEdges()
             }
         );
 
         SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
-        this.StateChanged += MainWindow_StateChanged;
+        this.StateChanged += (s, e) => UpdateMainWindowVisuals();
+        this.Activated += (s, e) => UpdateMainWindowVisuals();
+        this.Deactivated += (s, e) => UpdateMainWindowVisuals();
     }
 
     private void UpdateWindowBackground()
     {
-        if((!Utility.IsBackdropDisabled() && 
-                    !Utility.IsBackdropSupported()))
+        if((!Utility.IsBackdropDisabled() && !Utility.IsBackdropSupported()))
         {
             this.SetResourceReference(BackgroundProperty, "WindowBackground");
         }
@@ -64,39 +63,14 @@ public partial class MainWindow : Window
     {
         Dispatcher.Invoke(() =>
         {
-            UpdateTitleBarButtonsVisibility();
+            UpdateMainWindowVisuals();
         });
-    }
-
-    private void MainWindow_StateChanged(object? sender, EventArgs e)
-    {
-        if (this.WindowState == WindowState.Maximized)
-        {
-            MainGrid.Margin = new Thickness(8);
-        }
-        else
-        {
-            MainGrid.Margin = default;
-        }
     }
 
     private readonly IServiceProvider _serviceProvider;
     private readonly INavigationService _navigationService;
 
     public MainWindowViewModel ViewModel { get; }
-
-    private void ControlsList_SelectedItemChanged()
-    {
-        if (ControlsList.SelectedItem is ControlInfoDataItem navItem)
-        {
-            _navigationService.Navigate(navItem.PageType);
-            var tvi = ControlsList.ItemContainerGenerator.ContainerFromItem(navItem) as TreeViewItem;
-            if(tvi != null)
-            {
-                tvi.BringIntoView();
-            }
-        }
-    }
 
     private void UpdateTitleBarButtonsVisibility()
     {
@@ -106,26 +80,42 @@ public partial class MainWindow : Window
             MinimizeButton.Visibility = Visibility.Visible;
             MaximizeButton.Visibility = Visibility.Visible;
             CloseButton.Visibility = Visibility.Visible;
-
-            if(SystemParameters.HighContrast == true)
-            {
-                HighContrastBorder.SetResourceReference(BorderBrushProperty, SystemColors.ActiveCaptionBrushKey);
-                HighContrastBorder.BorderThickness = new Thickness(8, 2, 8, 8);
-            }
-            else
-            {
-                HighContrastBorder.BorderBrush = Brushes.Transparent;
-                HighContrastBorder.BorderThickness = new Thickness(0);
-            }
         }
         else
         {
             MinimizeButton.Visibility = Visibility.Collapsed;
             MaximizeButton.Visibility = Visibility.Collapsed;
             CloseButton.Visibility = Visibility.Collapsed;
+        }
+    }
 
-            HighContrastBorder.BorderThickness = new Thickness(0);
+    private void UpdateMainWindowVisuals()
+    {
+        MainGrid.Margin = default;
+        if(WindowState == WindowState.Maximized)
+        {
+            MainGrid.Margin = SystemParameters.HighContrast ? new Thickness(0,8,0,0) : new Thickness(8);
+        }
+
+        UpdateTitleBarButtonsVisibility();
+    
+        if(SystemParameters.HighContrast == true)
+        {
+            HighContrastBorder.SetResourceReference(BorderBrushProperty, IsActive ? SystemColors.ActiveCaptionBrushKey : 
+                                                                                    SystemColors.InactiveCaptionBrushKey);
+            HighContrastBorder.BorderThickness = new Thickness(8, 1, 8, 8);
+        }
+        else
+        {
             HighContrastBorder.BorderBrush = Brushes.Transparent;
+            HighContrastBorder.BorderThickness = new Thickness(0);
+        }
+
+        if(Utility.IsWindows11OrGreater())
+        {
+            WindowChrome wc = WindowChrome.GetWindowChrome(this);
+            if(wc is not null)
+                wc.NonClientFrameEdges = GetPrefferedNonClientFrameEdges();;
         }
     }
 
@@ -197,15 +187,6 @@ public partial class MainWindow : Window
         ViewModel.UpdateCanNavigateBack();
     }
 
-    private void SelectedItemChanged(TreeViewItem? tvi)
-    {
-        ControlsList_SelectedItemChanged();
-        if (tvi != null)
-        {
-            tvi.IsExpanded = !tvi.IsExpanded;
-        }
-    }
-
     private void ControlsList_PreviewKeyDown(object sender, KeyEventArgs e)
     {
         if (e.Key == Key.Enter) 
@@ -223,6 +204,84 @@ public partial class MainWindow : Window
         SelectedItemChanged(ControlsList.ItemContainerGenerator.ContainerFromItem((sender as TreeView).SelectedItem) as TreeViewItem);
     }
 
+    private void ControlsList_Loaded(object sender, RoutedEventArgs e)
+    {
+        ResizeNavChevrons();
+        if (ControlsList.Items.Count > 0)
+        {
+            TreeViewItem firstItem = (TreeViewItem)ControlsList.ItemContainerGenerator.ContainerFromItem(ControlsList.Items[0]);
+            if (firstItem != null)
+            {
+                firstItem.IsSelected = true;
+            }
+        }
+    }
+
+    // Thin FontSize-10 chevron anti-aliases to ~2.6:1; enlarging it reaches ~3.9:1 (MAS 1.4.11).
+    private const double NavChevronFontSize = 12d;
+
+    // Size is baked into the sealed template, so set it on each realized top-level chevron glyph.
+    private void ResizeNavChevrons()
+    {
+        foreach (object item in ControlsList.Items)
+        {
+            if (ControlsList.ItemContainerGenerator.ContainerFromItem(item) is TreeViewItem tvi
+                && FindChevronIcon(tvi) is TextBlock chevron)
+            {
+                chevron.FontSize = NavChevronFontSize;
+            }
+        }
+    }
+
+    private static TextBlock? FindChevronIcon(DependencyObject root)
+    {
+        int count = VisualTreeHelper.GetChildrenCount(root);
+        for (int i = 0; i < count; i++)
+        {
+            DependencyObject child = VisualTreeHelper.GetChild(root, i);
+
+            // Each item owns a single chevron in its own header; don't descend into nested items.
+            if (child is TreeViewItem)
+            {
+                continue;
+            }
+
+            if (child is TextBlock { Name: "ChevronIcon" } chevron)
+            {
+                return chevron;
+            }
+
+            if (FindChevronIcon(child) is TextBlock found)
+            {
+                return found;
+            }
+        }
+
+        return null;
+    }
+
+    private void SelectedItemChanged(TreeViewItem? tvi)
+    {
+        ControlsList_SelectedItemChanged();
+        if (tvi != null)
+        {
+            tvi.IsExpanded = !tvi.IsExpanded;
+        }
+    }
+
+    private void ControlsList_SelectedItemChanged()
+    {
+        if (ControlsList.SelectedItem is ControlInfoDataItem navItem)
+        {
+            _navigationService.Navigate(navItem.PageType);
+            var tvi = ControlsList.ItemContainerGenerator.ContainerFromItem(navItem) as TreeViewItem;
+            if(tvi != null)
+            {
+                tvi.BringIntoView();
+            }
+        }
+    }
+
     private void SettingsButton_Click(object sender, RoutedEventArgs e)
     {
         AutomationPeer peer = UIElementAutomationPeer.CreatePeerForElement((Button)sender);
@@ -234,16 +293,11 @@ public partial class MainWindow : Window
         );
     }
 
-    private void ControlsList_Loaded(object sender, RoutedEventArgs e)
+    private NonClientFrameEdges GetPrefferedNonClientFrameEdges()
     {
-        if (ControlsList.Items.Count > 0)
-        {
-            TreeViewItem firstItem = (TreeViewItem)ControlsList.ItemContainerGenerator.ContainerFromItem(ControlsList.Items[0]);
-            if (firstItem != null)
-            {
-                firstItem.IsSelected = true;
-            }
-        }
-    }
+        if (SystemParameters.HighContrast == true || Utility.IsWindows11OrGreater() == false)
+            return NonClientFrameEdges.None;
 
+        return NonClientFrameEdges.Right | NonClientFrameEdges.Bottom | NonClientFrameEdges.Left;
+    }
 }

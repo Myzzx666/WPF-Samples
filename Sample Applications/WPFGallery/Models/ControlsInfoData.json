@@ -35,10 +35,29 @@
                 "ImagePath": "Assets/ControlImages/TextBlock.png"
             },
             {
+                "UniqueId": "Spacing",
+                "Title": "Spacing",
+                "PageName": "SpacingPage",
+                "IconGlyph": "\uE8B3",
+                "IsNew": true,
+                "Description": "Guide showing how to use spacing in your app.",
+                "ImagePath": "Assets/ControlImages/CompactSizing.png"
+            },
+          {
+            "UniqueId": "Geometry",
+            "Title": "Geometry",
+            "PageName": "GeometryPage",
+            "IconGlyph": "\uE743",
+            "IsNew": true,
+            "Description": "Corner radius standards for your app.",
+            "ImagePath": "Assets/ControlImages/Border.png"
+          },
+            {
                 "UniqueId": "Icons",
                 "Title": "Icons",
                 "PageName": "IconsPage",
                 "IconGlyph": "\uED58",
+                "IsUpdated": true,
                 "Description": "Guide showing how to use icons in your app.",
                 "ImagePath": "Assets/ControlImages/IconElement.png"
             }
@@ -71,7 +90,7 @@
         "Title": "Basic Input",
         "PageName": "BasicInputPage",
         "IconGlyph": "\uE73A",
-        "Description": "Button, CheckBox, ComboBox, RadioButton, Slider.",
+        "Description": "Button, CheckBox, ComboBox, RadioButton, Slider",
         "ImagePath": "Assets/ControlImages/Button.png",
         "IsGroup": true,
         "Items": [
@@ -117,7 +136,7 @@
         "Title": "Collections",
         "PageName": "CollectionsPage",
         "IconGlyph": "\uE80A",
-        "Description": "DataGrid, ListBox, ListView, TreeView.",
+        "Description": "DataGrid, ListBox, ListView, TreeView",
         "ImagePath": "Assets/ControlImages/DataGrid.png",
         "IsGroup": true,
         "Items": [
@@ -125,6 +144,7 @@
                 "UniqueId": "DataGrid",
                 "Title": "DataGrid",
                 "PageName": "DataGridPage",
+                "IsUpdated": true,
                 "ImagePath": "Assets/ControlImages/DataGrid.png",
                 "Description": "The DataGrid control presents data in a customizable table of rows and columns."
             },
@@ -156,7 +176,7 @@
         "Title": "Date & Calendar",
         "PageName": "DateAndTimePage",
         "IconGlyph": "\uEC92",
-        "Description": "Calendar, DatePicker.",
+        "Description": "Calendar, DatePicker",
         "ImagePath": "Assets/ControlImages/CalendarView.png",
         "IsGroup": true,
         "Items": [
@@ -181,17 +201,65 @@
         "Title": "Layout",
         "PageName": "LayoutPage",
         "IconGlyph": "\uF246",
-        "Description": "Expander",
+        "Description": "Expander,Grid, ResizeGrip, GridSplitter, GroupBox, StackPanel, Border",
         "ImagePath": "Assets/ControlImages/Expander.png",
         "IsGroup": true,
         "Items": [
-            {
-                "UniqueId": "Expander",
-                "Title": "Expander",
-                "PageName": "ExpanderPage",
-                "ImagePath": "Assets/ControlImages/Expander.png",
-                "Description": "A container with a header that can be expanded to show a body with more content."
-            }
+          {
+            "UniqueId": "Expander",
+            "Title": "Expander",
+            "PageName": "ExpanderPage",
+            "ImagePath": "Assets/ControlImages/Expander.png",
+            "Description": "A container with a header that can be expanded to show a body with more content."
+          },
+          {
+            "UniqueId": "Grid",
+            "Title": "Grid",
+            "PageName": "GridPage",
+            "ImagePath": "Assets/ControlImages/Grid.png",
+            "IsNew": true,
+            "Description": "A layout panel that arranges child elements in rows and columns."
+          },
+          {
+            "UniqueId": "ResizeGrip",
+            "Title": "ResizeGrip",
+            "PageName": "ResizeGripPage",
+            "ImagePath": "Assets/ControlImages/ResizeGrip.png",
+            "IsNew": true,
+            "Description": "A control that enables users to resize a Window."
+            },
+          {
+            "UniqueId": "GridSplitter",
+            "Title": "GridSplitter",
+            "PageName": "GridSplitterPage",
+            "ImagePath": "Assets/ControlImages/GridSplitter.png",
+            "IsNew": true,
+            "Description": "The GridSplitter redistributes space between columns or rows of a Grid control."
+          },
+          {
+            "UniqueId": "GroupBox",
+            "Title": "GroupBox",
+            "PageName": "GroupBoxPage",
+            "ImagePath": "Assets/ControlImages/GroupBox.png",
+            "IsNew": true,
+            "Description": "A control that visually groups controls together while maintaining layout and accessibility."
+          },
+          {
+            "UniqueId": "StackPanel",
+            "Title": "StackPanel",
+            "PageName": "StackPanelPage",
+            "ImagePath": "Assets/ControlImages/StackPanel.png",
+            "IsNew": true,
+            "Description": "A layout panel that arranges child elements into a single line, either horizontally or vertically."
+          },
+          {
+            "UniqueId": "Border",
+            "Title": "Border",
+            "PageName": "BorderPage",
+            "ImagePath": "Assets/ControlImages/Border.png",
+            "IsNew": true,
+            "Description": "A decorator that draws a border, background, or both around another element."
+          }
         ]
     },
     {
@@ -199,7 +267,7 @@
         "Title": "Navigation",
         "PageName": "NavigationPage",
         "IconGlyph": "\uE700",
-        "Description": "Menu, TabControl.",
+        "Description": "Menu, TabControl, Frame, NavigationWindow",
         "ImagePath": "Assets/ControlImages/Pivot.png",
         "IsGroup": true,
         "Items": [
@@ -211,11 +279,27 @@
                 "Description": "A classic menu, allowing the display of MenuItems containing MenuFlyoutItems."
             },
             {
-                "UniqueId": "TabControl",
-                "Title": "TabControl",
-                "PageName": "TabControlPage",
-                "ImagePath": "Assets/ControlImages/TabView.png",
-                "Description": "A control that displays a collection of tabs."
+              "UniqueId": "TabControl",
+              "Title": "TabControl",
+              "PageName": "TabControlPage",
+              "ImagePath": "Assets/ControlImages/TabView.png",
+              "Description": "A control that displays a collection of tabs."
+            },
+            {
+              "UniqueId": "Frame",
+              "Title": "Frame",
+              "PageName": "FramePage",
+              "IsNew": true,
+              "ImagePath": "Assets/ControlImages/MenuBar.png",
+              "Description": "A navigation control that allows displaying different Page content within an application."
+            },
+            {
+                "UniqueId": "NavigationWindow",
+                "Title": "NavigationWindow",
+                "PageName": "NavigationWindowPage",
+                "IsNew": true,
+                "ImagePath": "Assets/ControlImages/CreateMultipleWindows.png",
+                "Description": "A control that supports navigation between pages, similar to a web browser."
             }
         ]
     },
@@ -224,7 +308,7 @@
         "Title": "Status & Info",
         "PageName": "StatusAndInfoPage",
         "IconGlyph": "\uE8F2",
-        "Description": "ProgressBar, ToolTip.",
+        "Description": "ProgressBar, ToolTip",
         "ImagePath": "Assets/ControlImages/ProgressBar.png",
         "IsGroup": true,
         "Items": [
@@ -249,7 +333,7 @@
         "Title": "Text",
         "PageName": "TextPage",
         "IconGlyph": "\uE8D2",
-        "Description": "Label, TextBox, TextBlock, RichTextEdit, PasswordBox.",
+        "Description": "Label, TextBox, TextBlock, RichTextEdit, PasswordBox",
         "ImagePath": "Assets/ControlImages/TextBlock.png",
         "IsGroup": true,
         "Items": [
@@ -264,6 +348,7 @@
                 "UniqueId": "TextBox",
                 "Title": "TextBox",
                 "PageName": "TextBoxPage",
+                "IsUpdated": true,
                 "ImagePath": "Assets/ControlImages/TextBox.png",
                 "Description": "A single-line or multi-line plain text field."
             },
@@ -281,12 +366,54 @@
                 "ImagePath": "Assets/ControlImages/RichEditBox.png",
                 "Description": "A control that displays formatted text, hyperlinks, inline images, and other rich content."
             },
+          {
+            "UniqueId": "PasswordBox",
+            "Title": "PasswordBox",
+            "PageName": "PasswordBoxPage",
+            "ImagePath": "Assets/ControlImages/PasswordBox.png",
+            "Description": "A control for entering passwords."
+          },
+          {
+            "UniqueId": "Hyperlink",
+            "Title": "Hyperlink",
+            "PageName": "HyperlinkPage",
+            "ImagePath": "Assets/ControlImages/HyperlinkButton.png",
+            "Description": "A control to navigate to another document, webpage, or section within the same page."
+          }
+        ]
+    },
+    {
+        "UniqueId": "System",
+        "Title": "System",
+        "PageName": "SystemPage",
+        "IconGlyph": "\uE7F8",
+        "Description": "File and Folder Dialogs, MessageBox, Clipboard",
+        "ImagePath": "Assets/ControlImages/FilePicker.png",
+        "IsGroup": true,
+        "Items": [
             {
-                "UniqueId": "PasswordBox",
-                "Title": "PasswordBox",
-                "PageName": "PasswordBoxPage",
-                "ImagePath": "Assets/ControlImages/PasswordBox.png",
-                "Description": "A control for entering passwords."
+                "UniqueId": "File and Folder Dialogs",
+                "Title": "File and Folder Dialogs",
+                "PageName": "FileAndFolderDialogsPage",
+                "ImagePath": "Assets/ControlImages/FilePicker.png",
+                "IsNew": true,
+                "Description": "File and folder picker dialogs for opening and saving files."
+            },
+            {
+                "UniqueId": "MessageBox",
+                "Title": "MessageBox",
+                "PageName": "MessageBoxPage",
+                "ImagePath": "Assets/ControlImages/ContentDialog.png",
+                "IsNew": true,
+                "Description": "Display messages and get user responses through dialog boxes."
+            },
+            {
+                "UniqueId": "Clipboard",
+                "Title": "Clipboard",
+                "PageName": "ClipboardPage",
+                "ImagePath": "Assets/ControlImages/Clipboard.png",
+                "IsNew": true,
+                "Description": "Access and manipulate data stored in the system clipboard."
             }
         ]
     }

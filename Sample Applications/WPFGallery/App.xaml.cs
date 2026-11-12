@@ -1,5 +1,6 @@
-﻿using System.Configuration;
+using System.Configuration;
 using System.Data;
+using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -7,6 +8,7 @@ using WPFGallery.Navigation;
 using WPFGallery.ViewModels;
 using WPFGallery.Views;
 using WPFGallery.ViewModels.Samples;
+using WPFGallery.ViewModels.Layout;
 
 namespace WPFGallery;
 
@@ -46,12 +48,28 @@ public partial class App : Application
             services.AddTransient<ProgressBarPageViewModel>();
             services.AddTransient<MenuPage>();
             services.AddTransient<MenuPageViewModel>();
+            services.AddTransient<FramePage>();
+            services.AddTransient<FramePageViewModel>();
+            services.AddTransient<NavigationWindowPage>();
+            services.AddTransient<NavigationWindowPageViewModel>();
             services.AddTransient<ToolTipPage>();
             services.AddTransient<ToolTipPageViewModel>();
             services.AddTransient<CanvasPage>();
             services.AddTransient<CanvasPageViewModel>();
             services.AddTransient<ExpanderPage>();
             services.AddTransient<ExpanderPageViewModel>();
+            services.AddTransient<GridPage>();
+            services.AddTransient<GridPageViewModel>();
+            services.AddTransient<ResizeGripPage>();
+            services.AddTransient<ResizeGripPageViewModel>();
+            services.AddTransient<GridSplitterPage>();
+            services.AddTransient<GridSplitterPageViewModel>();
+            services.AddTransient<GroupBoxPage>();
+            services.AddTransient<GroupBoxPageViewModel>();
+            services.AddTransient<StackPanelPage>();
+            services.AddTransient<StackPanelPageViewModel>();
+            services.AddTransient<BorderPage>();
+            services.AddTransient<BorderPageViewModel>();
             services.AddTransient<ImagePage>();
             services.AddTransient<ImagePageViewModel>();
             services.AddTransient<DataGridPage>();
@@ -72,9 +90,10 @@ public partial class App : Application
             services.AddTransient<RichTextEditPageViewModel>();
             services.AddTransient<PasswordBoxPage>();
             services.AddTransient<PasswordBoxPageViewModel>();
+            services.AddTransient<HyperlinkPage>();
+            services.AddTransient<HyperlinkPageViewModel>();
             services.AddTransient<ColorsPage>();
             services.AddTransient<ColorsPageViewModel>();
-
             services.AddTransient<LayoutPage>();
             services.AddTransient<LayoutPageViewModel>();
             services.AddTransient<AllSamplesPage>();
@@ -99,12 +118,26 @@ public partial class App : Application
             services.AddTransient<SamplesPageViewModel>();
             services.AddTransient<DesignGuidancePage>();
             services.AddTransient<DesignGuidancePageViewModel>();
+            services.AddTransient<SystemPage>();
+            services.AddTransient<SystemPageViewModel>();
+            services.AddTransient<MessageBoxPage>();
+            services.AddTransient<MessageBoxPageViewModel>();
+            services.AddTransient<FileAndFolderDialogsPage>();
+            services.AddTransient<FileAndFolderDialogsPageViewModel>();
+            services.AddTransient<ClipboardPage>();
+            services.AddTransient<ClipboardPageViewModel>();
 
             services.AddTransient<UserDashboardPage>();
             services.AddTransient<UserDashboardPageViewModel>();
 
             services.AddTransient<TypographyPage>();
             services.AddTransient<TypographyPageViewModel>();
+
+            services.AddTransient<SpacingPage>();
+            services.AddTransient<SpacingPageViewModel>();
+
+            services.AddTransient<GeometryPage>();
+            services.AddTransient<GeometryPageViewModel>();
 
             services.AddSingleton<IconsPage>();
             services.AddSingleton<IconsPageViewModel>();
@@ -122,9 +155,24 @@ public partial class App : Application
 
         App app = new();
         app.InitializeComponent();
+        app.ApplyDeemphasizedTextOpacity();
         app.MainWindow = _host.Services.GetRequiredService<MainWindow>();
         app.MainWindow.Visibility = Visibility.Visible;
         app.Run();
+    }
+
+    // Dimmed text fails the 4.5:1 minimum under some high-contrast themes (e.g. Desert), so render
+    // de-emphasized text at full opacity there. DynamicResource pushes the change to every consumer.
+    private void ApplyDeemphasizedTextOpacity()
+    {
+        Resources["DeemphasizedTextOpacity"] = SystemParameters.HighContrast ? 1.0 : 0.7;
+        SystemParameters.StaticPropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(SystemParameters.HighContrast))
+            {
+                Resources["DeemphasizedTextOpacity"] = SystemParameters.HighContrast ? 1.0 : 0.7;
+            }
+        };
     }
 }
 
